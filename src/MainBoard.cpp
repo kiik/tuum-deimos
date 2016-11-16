@@ -8,13 +8,12 @@
 namespace tuum { namespace hal {
 
   const char CMD_BALL_SENSE[] = "bl";
-  const char CMD_DRIBBLER[] = "dm";
-  const char CMD_COIL[] = "c";
-  const char CMD_KICK[] = "k";
-  const char CMD_WKICK[] = "k3";
+  const char CMD_DRIBBLER[] = "dr";
+  const char CMD_CHRG[] = "chrg";
+  const char CMD_KICK[] = "kick";
 
   MainBoard::MainBoard() {
-    id = 255;
+    id = 1;
 
     m_ballSensorState = 0;
     m_dribblerState = 0;
@@ -77,18 +76,6 @@ namespace tuum { namespace hal {
     send({id, CMD_BALL_SENSE});
   }
 
-
-  void MainBoard::chargeCoil() {
-    send({id, CMD_COIL});
-  }
-
-  void MainBoard::releaseCoil() {
-    if(m_coilKickStrong)
-      send({id, CMD_KICK});
-    else
-      send({id, CMD_WKICK});
-  }
-
   void MainBoard::coilKick() {
     if(!m_coilKickActive && m_coilKickCooldown.isTime()) {
       senseBall();
@@ -97,33 +84,30 @@ namespace tuum { namespace hal {
       m_coilChargeLevel = 0;
       m_coilKickCharge.start();
     }
+    if(m_coilKickActive && m_coilKickCharge.isTime()){
+      releaseCoil();
+      m_coilKickActive = false;
+      m_coilKickCooldown.start();
+
+    }
   }
 
-  void MainBoard::doCoilKick() {
-    m_coilKickStrong = true;
-    coilKick();
+  void MainBoard::chargeCoil() {
+    send({id, CMD_CHRG});
   }
 
-  void MainBoard::doWeakCoilKick() {
-    m_coilKickStrong = false;
-    coilKick();
+  void MainBoard::releaseCoil() {
+    send({id, CMD_KICK});
   }
 
-  std::string getDribblerCmd(int v) {
-    std::stringstream out;
-    out << CMD_DRIBBLER;
-    out << v;
-    return out.str();
-  }
-
-  void MainBoard::startDribbler() {
+  void MainBoard::startDribbler(float v) {
     m_dribblerState = 1;
-    send({id, getDribblerCmd(140)});
+    send({1, format("dr,%.2f", v)});
   }
 
   void MainBoard::stopDribbler() {
     m_dribblerState = 0;
-    send({id, getDribblerCmd(0)});
+    send({id, format("dr,%.2f", 0)});
   }
 
 

@@ -18,7 +18,6 @@ namespace tuum { namespace hal {
 
     Timer m_coilKickCharge;
     Timer m_coilKickCooldown;
-    bool m_coilKickStrong;
 
     Timer m_updateTimer;
 
@@ -35,13 +34,10 @@ namespace tuum { namespace hal {
     void senseBall();
     void chargeCoil();
     void releaseCoil();
-    void startDribbler();
+    void startDribbler(float = 0.05);
     void stopDribbler();
 
     void coilKick();
-    void doCoilKick();
-    void doWeakCoilKick();
-
   };
 
 }}

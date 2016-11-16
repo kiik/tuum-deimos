@@ -48,15 +48,12 @@ namespace tuum { namespace hal {
       usleep(10);
     }*/
 
-    // cm / s, radians, deg / s
-    send({1, format("om,%.2f,%.2f,%.2f", (spd / 10.0), dir, rot)});
+    // mm / s, radians, deg / s
+    send({1, format("om,%.2f,%.2f,%.2f", spd, dir, rot)});
   }
 
   void MotorControl::stop() {
-    for (int ix=0; ix < MOTOR_COUNT; ix++) {
-      send({m_motorIDs[ix], getSpeedCmd(0)});
-      usleep(10);
-    }
+    omniDrive(0, 0, 0);
   }
 
 }}

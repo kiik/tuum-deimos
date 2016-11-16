@@ -41,7 +41,7 @@ namespace tuum { namespace hal {
       //m_refereeListener.init(gC.getStr("RefModule.Port").c_str(), gC.getInt("RefModule.Baud"));
 
       m_motorControl.init(hw_bus_write);
-      //m_mainBoard.init(hw_bus_write, hw_bus_register);
+      m_mainBoard.init(hw_bus_write, hw_bus_register);
     } else {
       RTXLOG("Hardware not active.\n", LOG_WARN);
     }

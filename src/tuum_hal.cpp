@@ -26,6 +26,7 @@ namespace tuum { namespace hal {
     if(senseTimer.isTime()) {
       hw.getMainBoard()->senseBall();
       senseTimer.start();
+      hw.getMainBoard()->coilKick();
     }
 
     hw.process();
