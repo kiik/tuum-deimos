@@ -34,14 +34,15 @@ namespace tuum { namespace hal {
   }
 
   void MainBoard::signal(RTX485::Message m) {
-    uint32_t ix = m.data.find(":");
-    if(ix != -1) {
-      std::string buf;
-      buf = m.data.substr(0, ix);
+    std::string buf;
+    size_t ix = m.data.find(",");
+    if(ix == -1) return;
 
-      if(buf == CMD_BALL_SENSE) {
-        m_ballSensorState = atoi(m.data.substr(ix+1).c_str());
-      }
+    buf = m.data.substr(0, ix);
+
+    if(buf == "bl") {
+      std::string value = m.data.substr(ix + 1, 1);
+      m_ballSensorState = atoi(value.c_str());
     }
   }
 
