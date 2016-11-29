@@ -47,7 +47,8 @@ void SerialPort::init(const char *com_port_name, int baud_rate)
   port_->set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
   port_->set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
 
-  boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service_));
+  mThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service_));
+  mThread->detach();
 
   async_read_some_();
 
@@ -97,6 +98,7 @@ void SerialPort::async_read_some_()
 void SerialPort::on_receive_(const boost::system::error_code& ec, size_t bytes_transferred)
 {
   boost::mutex::scoped_lock look(mutex_);
+  printf("D\n");
 
   if (port_.get() == NULL || !port_->is_open()) return;
   if (ec) {

@@ -26,6 +26,8 @@ class SerialPort {
 
     char end_of_line_char_;
 
+    boost::thread* mThread;
+
   private:
     SerialPort(const SerialPort &p);
     SerialPort &operator=(const SerialPort &p);

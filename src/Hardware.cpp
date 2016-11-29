@@ -36,7 +36,7 @@ namespace tuum { namespace hal {
       m_backCamera = new Camera(gC.getStr("Vision.SecondCamera"), CAMERA_WIDTH, CAMERA_HEIGHT);
 
     if(gC.getStr("HW.Active") == "Y") {
-      RTXLOG("Loading modules...\n");
+      RTXLOG(format("Loading modules... (%s, %i)\n", gC.getStr("HWBus.Port").c_str(), gC.getInt("HWBus.Baud")));
       HWBus.init(gC.getStr("HWBus.Port").c_str(), gC.getInt("HWBus.Baud"));
       //m_refereeListener.init(gC.getStr("RefModule.Port").c_str(), gC.getInt("RefModule.Baud"));
 

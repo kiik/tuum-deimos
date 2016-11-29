@@ -28,6 +28,7 @@ namespace tuum { namespace hal {
       c = data[i];
       m_dataBuf += c;
 
+      printf("in:%s\n", c);
       if(c == '\n') {
         Message msg;
         if(processData(m_dataBuf, msg) < 0) return;
@@ -41,7 +42,9 @@ namespace tuum { namespace hal {
     std::stringstream data;
     data << '<' << (unsigned int)id << ":" << cmd << ">\n";
     //RTXLOG(format("%s", data.str()), LOG_DEBUG);
-    write_some(data.str());
+    std::string buf = data.str();
+    printf("out:%s\n", buf.c_str());
+    write_some(buf);
   }
 
   //FIXME: Refactor code
@@ -63,31 +66,31 @@ namespace tuum { namespace hal {
       switch(state) {
         case RMC_BEGIN:
           if(c == '<') state = RMC_ID;
-	  break;
-	case RMC_ID:
-	  if(c == ':') {
-	    msg.id = atoi(buf.str().c_str());
-	    buf.str("");
-	    state = RMC_DATA;
-	    break;
-	  }
-          buf << c;
-	  break;
-	case RMC_DATA:
-	  if(c == '>') {
-	    msg.data = buf.str();
-	    state = RMC_END;
-	    break;
-	  }
-	  buf << c;
-	  break;
-      }
+      	  break;
+      	case RMC_ID:
+      	  if(c == ':') {
+      	    msg.id = atoi(buf.str().c_str());
+      	    buf.str("");
+      	    state = RMC_DATA;
+      	    break;
+      	  }
+                buf << c;
+      	  break;
+      	case RMC_DATA:
+      	  if(c == '>') {
+      	    msg.data = buf.str();
+      	    state = RMC_END;
+      	    break;
+      	  }
+      	  buf << c;
+      	  break;
+            }
 
-      if(state == RMC_END) break;
-    }
-    if(state != RMC_END) return -1;
+            if(state == RMC_END) break;
+          }
+          if(state != RMC_END) return -1;
 
-    return 0;
+          return 0;
   }
 
   void RTX485::registerDevice(SignalParams sp) {
