@@ -51,21 +51,8 @@ namespace tuum { namespace hal {
       if(m_dribblerState) {
         startDribbler();
       }
+      senseBall();
       m_updateTimer.start();
-    }
-
-    if(m_coilKickActive && m_coilKickCharge.isTime()) {
-      if(m_coilChargeLevel > 4) {
-        m_coilKickActive = false;
-	m_coilKickCooldown.start();
-      } else {
-      	chargeCoil();
-        m_coilChargeLevel++;
-	if(m_coilChargeLevel == 1) releaseCoil();
-	else chargeCoil();
-	m_coilKickCharge.start();
-      }
-
     }
   }
 
@@ -79,7 +66,6 @@ namespace tuum { namespace hal {
 
   void MainBoard::coilKick() {
     if(!m_coilKickActive && m_coilKickCooldown.isTime()) {
-      senseBall();
       chargeCoil();
       m_coilKickActive = true;
       m_coilChargeLevel = 0;
