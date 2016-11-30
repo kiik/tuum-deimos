@@ -28,11 +28,10 @@ namespace tuum { namespace hal {
       c = data[i];
       m_dataBuf += c;
 
-      printf("in:%s\n", c);
       if(c == '\n') {
         Message msg;
         if(processData(m_dataBuf, msg) < 0) return;
-        printf("in:%s\n", m_dataBuf.c_str());
+        //printf("in:%s\n", m_dataBuf.c_str());
         signal(msg);
         m_dataBuf = "";
       }
@@ -44,7 +43,7 @@ namespace tuum { namespace hal {
     data << '<' << (unsigned int)id << ":" << cmd << ">\n";
     //RTXLOG(format("%s", data.str()), LOG_DEBUG);
     std::string buf = data.str();
-    printf("out:%s\n", buf.c_str());
+    //printf("out:%s\n", buf.c_str());
     write_some(buf);
   }
 
