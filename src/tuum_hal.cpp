@@ -25,8 +25,8 @@ namespace tuum { namespace hal {
   void process() {
 
     if(senseTimer.isTime()) {
-      hw.getMainBoard()->senseBall();
-      printf("%i\n",hw.getMainBoard()->getBallSensorState());
+      //hw.getMainBoard()->senseBall();
+      printf("SWITCH 4: '%i'\n",hw.getMainBoard()->getSwitch(3));
       senseTimer.start();
     }
 

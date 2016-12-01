@@ -11,6 +11,8 @@ namespace tuum { namespace hal {
   const char CMD_DRIBBLER[] = "dr";
   const char CMD_CHRG[] = "chrg";
   const char CMD_KICK[] = "kick";
+  const char CMD_SWITCH[] = "sw";
+  const char CMD_GETSWITCH[] = "gsw";
 
   MainBoard::MainBoard() {
     id = 1;
@@ -18,6 +20,11 @@ namespace tuum { namespace hal {
     m_ballSensorState = 0;
     m_dribblerState = 0;
     m_coilKickActive = 0;
+    m_switchState = 0;
+
+    for(size_t i=0; i < 4; i++) {
+      m_switchStates[i] = getSwitch(i);
+    }
 
     m_coilKickCharge.setPeriod(300);
     m_coilKickCooldown.setPeriod(1500);
@@ -40,9 +47,22 @@ namespace tuum { namespace hal {
 
     buf = m.data.substr(0, ix);
 
-    if(buf == "bl") {
+    if(buf == "bl") { //bl,1
       std::string value = m.data.substr(ix + 1, 1);
       m_ballSensorState = atoi(value.c_str());
+    }
+
+    if(buf == "sw") { //sw,3,1
+      std::string sw = m.data.substr(ix+1, 1);
+      std::string value = m.data.substr(ix+3, 1);
+      m_switchStates[atoi(sw.c_str())] = atoi(value.c_str());
+    }
+
+    if(buf == "gsw") { //gsw,3,1
+      std::string sw = m.data.substr(ix+1, 1);
+      std::string value = m.data.substr(ix+3, 1);
+      m_switchStates[atoi(sw.c_str())] = atoi(value.c_str());
+
     }
   }
 
@@ -54,6 +74,11 @@ namespace tuum { namespace hal {
       senseBall();
       m_updateTimer.start();
     }
+  }
+
+  bool MainBoard::getSwitch(size_t ix) {
+    send({id, CMD_GETSWITCH});
+    return m_switchStates[ix];
   }
 
   bool MainBoard::getBallSensorState() {

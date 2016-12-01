@@ -57,6 +57,7 @@ namespace tuum { namespace hal {
       int m_dribbler;
       int m_coilGun;
       int m_ballSensor;
+      int m_switches;
 
       MainBoard m_mainBoard;
 
