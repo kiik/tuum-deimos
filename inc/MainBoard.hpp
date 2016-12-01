@@ -15,11 +15,9 @@ namespace tuum { namespace hal {
     bool m_coilKickActive;
     bool m_switchState;
     bool m_switchStates[4];
+    bool m_coilCharged;
 
-    unsigned short m_coilChargeLevel;
-
-    Timer m_coilKickCharge;
-    Timer m_coilKickCooldown;
+    Timer m_coilCooldown;
 
     Timer m_updateTimer;
 
@@ -35,9 +33,14 @@ namespace tuum { namespace hal {
     bool getSwitch(size_t);
 
     void senseBall();
+
     void chargeCoil();
     void releaseCoil();
     void startDribbler(float = 0.2);
+
+    // These functions manage charging/kicking cycle.
+    void coilCharge();
+
     void stopDribbler();
 
     void coilKick();
