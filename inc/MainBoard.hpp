@@ -12,12 +12,9 @@ namespace tuum { namespace hal {
   private:
     bool m_ballSensorState;
     bool m_dribblerState;
-    bool m_coilKickActive;
+    bool m_coilCharged;
 
-    unsigned short m_coilChargeLevel;
-
-    Timer m_coilKickCharge;
-    Timer m_coilKickCooldown;
+    Timer m_coilCooldown;
 
     Timer m_updateTimer;
 
@@ -32,8 +29,14 @@ namespace tuum { namespace hal {
     bool getBallSensorState();
 
     void senseBall();
+
     void chargeCoil();
     void releaseCoil();
+
+    // These functions manage charging/kicking cycle.
+    void coilCharge();
+    void coilRelease();
+
     void startDribbler(float = 0.1);
     void stopDribbler();
 

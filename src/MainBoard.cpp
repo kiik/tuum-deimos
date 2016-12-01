@@ -12,15 +12,16 @@ namespace tuum { namespace hal {
   const char CMD_CHRG[] = "chrg";
   const char CMD_KICK[] = "kick";
 
-  MainBoard::MainBoard() {
+  MainBoard::MainBoard():
+    m_coilCharged(false)
+  {
     id = 1;
 
     m_ballSensorState = 0;
     m_dribblerState = 0;
-    m_coilKickActive = 0;
 
-    m_coilKickCharge.setPeriod(300);
-    m_coilKickCooldown.setPeriod(1500);
+    m_coilCooldown.setPeriod(100);
+    m_coilCooldown.start(5000);
 
     m_updateTimer.setPeriod(300);
     m_updateTimer.start();
@@ -54,6 +55,10 @@ namespace tuum { namespace hal {
       senseBall();
       m_updateTimer.start();
     }
+
+    if(!m_coilCharged) {
+      coilCharge();
+    }
   }
 
   bool MainBoard::getBallSensorState() {
@@ -64,18 +69,24 @@ namespace tuum { namespace hal {
     send({id, CMD_BALL_SENSE});
   }
 
-  void MainBoard::coilKick() {
-    if(!m_coilKickActive && m_coilKickCooldown.isTime()) {
+  void MainBoard::coilCharge() {
+    if(!m_coilCharged && m_coilCooldown.isTime()) {
       chargeCoil();
-      m_coilKickActive = true;
-      m_coilChargeLevel = 0;
-      m_coilKickCharge.start();
+      m_coilCharged = true;
+      m_coilCooldown.start(1000);
     }
-    if(m_coilKickActive && m_coilKickCharge.isTime()){
-      releaseCoil();
-      m_coilKickActive = false;
-      m_coilKickCooldown.start();
+  }
 
+  void MainBoard::coilKick() {
+    if(!m_coilCharged) {
+      coilCharge();
+      return;
+    }
+
+    if(m_coilCooldown.isTime()){
+      releaseCoil();
+      m_coilCharged = false;
+      m_coilCooldown.start(100);
     }
   }
 
