@@ -17,6 +17,8 @@ namespace tuum { namespace hal {
 
   static RTX485::SignalMap rs_callbacks;
 
+  bool dbg_in = false, dbg_out = false;
+
   RTX485::RTX485() {
 
   }
@@ -31,7 +33,12 @@ namespace tuum { namespace hal {
       if(c == '\n') {
         Message msg;
         if(processData(m_dataBuf, msg) < 0) return;
-        //printf("in:%s\n", m_dataBuf.c_str());
+
+        if(!dbg_in) {
+          printf("in:%s\n", m_dataBuf.c_str());
+          dbg_in = true;
+        }
+
         signal(msg);
         m_dataBuf = "";
       }
@@ -43,7 +50,12 @@ namespace tuum { namespace hal {
     data << '<' << (unsigned int)id << ":" << cmd << ">\n";
     //RTXLOG(format("%s", data.str()), LOG_DEBUG);
     std::string buf = data.str();
-    //printf("out:%s\n", buf.c_str());
+
+    if(!dbg_out) {
+      printf("out:%s\n", buf.c_str());
+      dbg_out = true;
+    }
+
     write_some(buf);
   }
 
