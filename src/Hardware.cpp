@@ -38,7 +38,7 @@ namespace tuum { namespace hal {
     if(gC.getStr("HW.Active") == "Y") {
       RTXLOG(format("Loading modules... (%s, %i)\n", gC.getStr("HWBus.Port").c_str(), gC.getInt("HWBus.Baud")));
       HWBus.init(gC.getStr("HWBus.Port").c_str(), gC.getInt("HWBus.Baud"));
-      //m_refereeListener.init(gC.getStr("RefModule.Port").c_str(), gC.getInt("RefModule.Baud"));
+      m_refereeListener.init(gC.getStr("RefModule.Port").c_str(), gC.getInt("RefModule.Baud"));
 
       m_motorControl.init(hw_bus_write);
       m_mainBoard.init(hw_bus_write, hw_bus_register);

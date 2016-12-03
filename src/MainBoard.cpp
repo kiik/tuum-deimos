@@ -28,8 +28,8 @@ namespace tuum { namespace hal {
       m_switchStates[i] = getSwitch(i);
     }
 
-    m_coilCooldown.setPeriod(100);
-    m_coilCooldown.start(5000);
+    m_coilCooldown.setPeriod(300);
+    m_coilCooldown.start(1500);
 
     m_updateTimer.setPeriod(300);
     m_updateTimer.start();
