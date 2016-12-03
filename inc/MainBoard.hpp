@@ -12,7 +12,9 @@ namespace tuum { namespace hal {
   private:
     bool m_ballSensorState;
     bool m_dribblerState;
-    bool m_coilCharged;
+    bool m_coilKickActive;
+    bool m_switchState;
+    bool m_switchStates[4];
 
     Timer m_coilCooldown;
 
@@ -27,6 +29,7 @@ namespace tuum { namespace hal {
     void run();
 
     bool getBallSensorState();
+    bool getSwitch(size_t);
 
     void senseBall();
 
