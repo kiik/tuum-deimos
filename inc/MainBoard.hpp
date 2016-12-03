@@ -16,9 +16,6 @@ namespace tuum { namespace hal {
     bool m_switchState;
     bool m_switchStates[4];
     bool m_coilCharged;
-    bool m_coilKickActive;
-    bool m_switchState;
-    bool m_switchStates[4];
 
     Timer m_coilCooldown;
 
