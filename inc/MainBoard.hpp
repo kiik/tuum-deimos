@@ -37,7 +37,7 @@ namespace tuum { namespace hal {
     void senseBall();
     void chargeCoil();
     void releaseCoil();
-    void startDribbler(float = 0.1);
+    void startDribbler(float = 0.2);
     void stopDribbler();
 
     void coilKick();
