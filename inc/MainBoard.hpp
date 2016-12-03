@@ -35,12 +35,16 @@ namespace tuum { namespace hal {
 
     void chargeCoil();
     void releaseCoil();
+<<<<<<< HEAD
 
     // These functions manage charging/kicking cycle.
     void coilCharge();
     void coilRelease();
 
     void startDribbler(float = 0.1);
+=======
+    void startDribbler(float = 0.2);
+>>>>>>> a2ba6bfb74c638281e56985838b7b44b7367fbcc
     void stopDribbler();
 
     void coilKick();
