@@ -91,6 +91,10 @@ namespace tuum { namespace hal {
     return m_ballSensorState;
   }
 
+  bool MainBoard::getDribblerState() {
+    return m_dribblerState;
+  }
+
   void MainBoard::senseBall() {
     send({id, CMD_BALL_SENSE});
   }

@@ -31,6 +31,7 @@ namespace tuum { namespace hal {
 
     bool getBallSensorState();
     bool getSwitch(size_t);
+    bool getDribblerState();
 
     void senseBall();
 
