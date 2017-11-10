@@ -10,12 +10,13 @@
   ],
   'dependencies': [
     'libenv',
+    'librtxmath',
   ],
   'sources': [
     'src/Hardware.cpp',
     'src/MainBoard.cpp',
     'src/Camera.cpp',
-    'src/MotorControl.cpp',
+    'src/MotionControl.cpp',
     'src/MotorDriver.cpp',
     'src/RefereeListener.cpp',
     'src/RTX485.cpp',

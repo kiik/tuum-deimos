@@ -14,11 +14,12 @@
 #include "RTX485.hpp"
 
 #include "Camera.hpp"
-#include "MotorControl.hpp"
+#include "MotionControl.hpp"
 #include "MainBoard.hpp"
 #include "RefereeListener.hpp"
 
-namespace tuum { namespace hal {
+namespace tuum {
+namespace hal {
 
   // Hardware controllers RS485 bus communication handle.
   static RTX485 HWBus;
@@ -43,13 +44,17 @@ namespace tuum { namespace hal {
       Camera* getFrontCamera();
       Camera* getBackCamera();
 
-      MotorControl* getMotorControl();
+      MotionControl* getMotionControl();
+
+      // Deprecated
+      MotionControl* getMotorControl();
+
       MainBoard* getMainBoard();
 
       RefereeListener* getRefListener();
 
     private:
-      MotorControl m_motorControl;
+      MotionControl m_motCtl;
 
       Camera *m_frontCamera;
       Camera *m_backCamera;

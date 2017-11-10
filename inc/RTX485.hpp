@@ -15,7 +15,8 @@
 
 #include "SerialPort.hpp"
 
-namespace tuum { namespace hal {
+namespace tuum {
+namespace hal {
 
   class RTX485 : public SerialPort {
   public:

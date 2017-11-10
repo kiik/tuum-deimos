@@ -40,7 +40,7 @@ namespace tuum { namespace hal {
       HWBus.init(gC.getStr("HWBus.Port").c_str(), gC.getInt("HWBus.Baud"));
       m_refereeListener.init(gC.getStr("RefModule.Port").c_str(), gC.getInt("RefModule.Baud"));
 
-      m_motorControl.init(hw_bus_write);
+      m_motCtl.init(hw_bus_write);
       m_mainBoard.init(hw_bus_write, hw_bus_register);
     } else {
       RTXLOG("Hardware not active.\n", LOG_WARN);
@@ -72,8 +72,12 @@ namespace tuum { namespace hal {
     return &m_mainBoard;
   }
 
-  MotorControl* Hardware::getMotorControl() {
-    return &m_motorControl;
+  MotionControl* Hardware::getMotionControl() {
+    return &m_motCtl;
+  }
+
+  MotionControl* Hardware::getMotorControl() {
+    return &m_motCtl;
   }
 
   RefereeListener* Hardware::getRefListener() {
