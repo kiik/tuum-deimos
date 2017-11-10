@@ -4,11 +4,14 @@
 
 #include "RTX485.hpp"
 
+#include "Vec.hpp"
+
 #define MOTOR_COUNT 4
 
-namespace tuum { namespace hal {
+namespace tuum {
+namespace hal {
 
-  class MotorControl : public RTX485::Device
+  class MotionControl : public RTX485::Device
   {
   public:
 
@@ -20,12 +23,14 @@ namespace tuum { namespace hal {
 
     };
 
-    MotorControl();
+    MotionControl();
 
     void init(RTX485::WriteHandle);
 
     // mm / s, radians, deg / s
     void omniDrive(float, float, float);
+
+    void aiMove(Vec2d);
 
     void stop();
 

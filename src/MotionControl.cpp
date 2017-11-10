@@ -4,19 +4,20 @@
 
 #include "tuum_logger.hpp"
 
-#include "MotorControl.hpp"
+#include "MotionControl.hpp"
 
-namespace tuum { namespace hal {
+namespace tuum {
+namespace hal {
 
   const char CMD_MOTOR_SPEED[] = "sd";
 
-  MotorControl::MotorControl():
+  MotionControl::MotionControl():
     RTX485::Device::Device()
   {
 
   }
 
-  void MotorControl::init(RTX485::WriteHandle wHandle) {
+  void MotionControl::init(RTX485::WriteHandle wHandle) {
     int id_seq, ix;
     for(ix=0, id_seq=1; ix < MOTOR_COUNT; ix++, id_seq++) {
       m_motorIDs[ix] = id_seq;
@@ -27,15 +28,14 @@ namespace tuum { namespace hal {
     RTXLOG("Ready.");
   }
 
-
-  std::string MotorControl::getSpeedCmd(int v) {
+  std::string MotionControl::getSpeedCmd(int v) {
     std::stringstream out;
     out << CMD_MOTOR_SPEED;
     out << v;
     return out.str();
   }
 
-  void MotorControl::omniDrive(float spd, float dir, float rot) {
+  void MotionControl::omniDrive(float spd, float dir, float rot) {
     /**
     int spd1 = speed * sin(angle + M_PI / 4.0) + rot;
     int spd2 = speed * -sin(angle - M_PI / 4.0) + rot;
@@ -52,8 +52,12 @@ namespace tuum { namespace hal {
     send({1, format("om,%.2f,%.2f,%.2f", spd, dir, rot)});
   }
 
-  void MotorControl::stop() {
+  void MotionControl::stop() {
     omniDrive(0, 0, 0);
+  }
+
+  void MotionControl::aiMove(Vec2d mv) {
+    RTXLOG(format("#TODO: (%.2f, %.2f)", mv.x, mv.y));
   }
 
 }}
