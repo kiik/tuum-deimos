@@ -24,7 +24,7 @@
 namespace tuum { namespace hal {
 
   CameraBase::CameraBase(const std::string &device, const size_t& width, const size_t& height):
-    m_device(device), m_iprop({width, height, 0, 0}), m_oprop({0, 0, 0, 0}),
+    m_device(device), m_iprop(width, height), m_oprop(),
     m_fd(-1)
   {
 
@@ -114,7 +114,6 @@ namespace tuum { namespace hal {
     m_iprop = {
       format.fmt.pix.width,
       format.fmt.pix.height,
-      format.fmt.pix.bytesperline,
       (format.fmt.pix.bytesperline / format.fmt.pix.width)
     };
 
