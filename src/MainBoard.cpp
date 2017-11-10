@@ -124,6 +124,11 @@ namespace tuum { namespace hal {
     send({id, CMD_KICK});
   }
 
+  bool MainBoard::getDribblerState()
+  {
+    return false; //TODO
+  }
+
   void MainBoard::startDribbler(float v) {
     m_dribblerState = 1;
     send({1, format("dr,%.2f", v)});
