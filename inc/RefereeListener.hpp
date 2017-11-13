@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 
+#include <boost/function.hpp>
+
 #include "tuum_communication.hpp"
 
 #include "SerialPort.hpp"
@@ -61,7 +63,9 @@ namespace tuum { namespace hal {
     RefTarget target;
   };
 
-  typedef void (*VoidFn)(RefCommand);
+  // typedef void (*VoidFn)(RefCommand);
+  typedef boost::function<void(RefCommand)> VoidFn;
+
   typedef std::pair<RefereeSignal, VoidFn> SignalCallback;
 
   //FIXME: This is not regularly working over different threads.
