@@ -17,6 +17,8 @@ namespace tuum { namespace hal {
     bool m_switchStates[4];
     bool m_coilCharged;
 
+    int m_throwSpeed;
+
     Timer m_coilCooldown;
 
     Timer m_updateTimer;
@@ -44,6 +46,9 @@ namespace tuum { namespace hal {
     bool getDribblerState();
     void startDribbler(float = 0.2);
     void stopDribbler();
+
+    void setThrowSpeed(unsigned int);
+    void setThrowAngle(unsigned int);
 
     void coilKick();
   };

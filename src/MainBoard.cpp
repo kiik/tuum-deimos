@@ -5,17 +5,24 @@
 
 #include "MainBoard.hpp"
 
-namespace tuum { namespace hal {
+namespace tuum {
+namespace hal {
 
-  const char CMD_BALL_SENSE[] = "bl";
-  const char CMD_DRIBBLER[] = "dr";
-  const char CMD_CHRG[] = "chrg";
-  const char CMD_KICK[] = "kick";
+  const char CMD_BALL_SENSE[] = "gbs";
+  const char CMD_DRIBBLER[] = "sms";
+
+  const char CMD_GET_THROW_ANGLE[] = "gng";
+  const char CMD_SET_THROW_ANGLE[] = "sng";
+
   const char CMD_SWITCH[] = "sw";
   const char CMD_GETSWITCH[] = "gsw";
 
+  const char CMD_CHRG[] = "chrg";
+  const char CMD_KICK[] = "kick";
+
   MainBoard::MainBoard():
-    m_coilCharged(false)
+    m_coilCharged(false),
+    m_throwSpeed(0)
   {
     id = 1;
 
@@ -129,16 +136,27 @@ namespace tuum { namespace hal {
     return false; //TODO
   }
 
-  void MainBoard::startDribbler(float v) {
-    m_dribblerState = 1;
-    send({1, format("dr,%.2f", v)});
+  void MainBoard::startDribbler(float v)
+  {
+
   }
 
-  void MainBoard::stopDribbler() {
-    m_dribblerState = 0;
-    send({id, format("dr,%.2f", 0)});
+  void MainBoard::stopDribbler()
+  {
+
   }
 
+  void MainBoard::setThrowSpeed(unsigned int percent) {
+    if(percent >= 100) percent = 99;
 
+    m_throwSpeed = percent;
+    send({id, format("%s,%i", CMD_DRIBBLER, m_throwSpeed)});
+  }
+
+  void MainBoard::setThrowAngle(unsigned int percent) {
+    if(percent >= 100) percent = 99;
+
+    send({id, format("%s,%i", CMD_SET_THROW_ANGLE, percent)});
+  }
 
 }}
