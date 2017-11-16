@@ -9,6 +9,8 @@
 #ifndef HAL_HARDWARE_H
 #define HAL_HARDWARE_H
 
+#include <opencv2/opencv.hpp>
+
 #include "tuum_platform.hpp"
 
 #include "RTX485.hpp"
@@ -32,7 +34,50 @@ namespace hal {
     HWBus.registerDevice(sigInfo);
   }
 
+
+  struct fps_t
+  {
+    time_ms_t t0, dt, dt_avg;
+    double p;
+
+    fps_t():
+      t0(millis()), dt(0)
+    {
+      p = 0.02;
+    }
+
+    void tick(time_ms_t t = 0)
+    {
+      if(t == 0) t = millis();
+
+      dt = t - t0;
+
+      // dt_new -> n projection
+      //p = cv::max((double)(dt / 1000), (double)0.005);
+
+      if(dt_avg == 0) dt_avg = dt;
+      dt_avg = dt_avg * (1 - p) + dt * p;
+
+      t0 = t;
+    }
+  };
+
   class Hardware {
+    public:
+      struct Stats {
+        time_ms_t frameDelta, frameDeltaAvg, hwDelta, hwDeltaAvg;
+        float frameDeltaFilter, hwDeltaFilter;
+
+        std::string toString()
+        {
+          return tuum::format(
+            "{.frameDelta = {%lums, ~%luHz, f=%.3f}, .hwDelta = {%lums, ~%luHz, f=%.3f} }",
+            frameDelta, (1000 / frameDeltaAvg), frameDeltaFilter,
+            hwDelta, (1000 / hwDeltaAvg), hwDeltaFilter
+          );
+        }
+      };
+
     public:
       Hardware();
 
@@ -44,6 +89,8 @@ namespace hal {
       Camera* getFrontCamera();
       Camera* getBackCamera();
 
+      int readFrame(cv::Mat&);
+
       MotionControl* getMotionControl();
 
       // Deprecated
@@ -53,11 +100,15 @@ namespace hal {
 
       RefereeListener* getRefListener();
 
+      Stats readStats();
+
     private:
       MotionControl m_motCtl;
 
       Camera *m_frontCamera;
       Camera *m_backCamera;
+
+      cv::VideoCapture *m_cvCamera;
 
       int m_dribbler;
       int m_coilGun;
@@ -68,6 +119,9 @@ namespace hal {
 
       RefereeListener m_refereeListener;
 
+      soft_clk_t m_clk_50Hz, m_clk_30Hz, m_clk_dbg;
+      fps_t m_fps_vs, m_fps_hw;
+      bool m_fps_dbg_en;
   };
 
 }}

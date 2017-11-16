@@ -19,7 +19,10 @@ namespace tuum { namespace hal {
 
   Hardware::Hardware():
     m_frontCamera(nullptr),
-    m_backCamera(nullptr)
+    m_backCamera(nullptr),
+    m_clk_30Hz(1000 / 30),
+    m_clk_50Hz(1000 / 50),
+    m_clk_dbg(1000)
   {
 
   }
@@ -27,13 +30,21 @@ namespace tuum { namespace hal {
   void Hardware::init() {
     RTXLOG("Loading video streams...\n");
     std::ifstream frontCameraDevice(gC.getStr("Vision.FirstCamera"));
+
+    /*
     if (frontCameraDevice.good())
       m_frontCamera = new Camera(gC.getStr("Vision.FirstCamera"), CAMERA_WIDTH, CAMERA_HEIGHT);
     if(m_frontCamera != nullptr) m_frontCamera->setup();
+    */
 
+    /*
     std::ifstream backCameraDevice(gC.getStr("Vision.SecondCamera"));
     if (backCameraDevice.good())
       m_backCamera = new Camera(gC.getStr("Vision.SecondCamera"), CAMERA_WIDTH, CAMERA_HEIGHT);
+    */
+
+    m_cvCamera = new cv::VideoCapture(1);
+    m_cvCamera->grab();
 
     if(gC.getStr("HW.Active") == "Y") {
       RTXLOG(format("Loading modules... (%s, %i)\n", gC.getStr("HWBus.Port").c_str(), gC.getInt("HWBus.Baud")));
@@ -48,12 +59,56 @@ namespace tuum { namespace hal {
   }
 
   void Hardware::setup() {
+
   }
 
   void Hardware::process() {
-    if(m_frontCamera != nullptr) m_frontCamera->process();
+    time_ms_t t = millis();
 
-    m_mainBoard.run();
+    if(m_clk_30Hz.tick(t))
+    {
+      m_fps_vs.tick(t);
+
+      if(m_frontCamera != nullptr) m_frontCamera->process();
+      if(m_cvCamera != nullptr) m_cvCamera->grab();
+    }
+
+    if(m_clk_50Hz.tick(t))
+    {
+      m_fps_hw.tick(t);
+
+      m_mainBoard.run();
+    }
+
+    if(m_clk_dbg.tick(t))
+    {
+      if(m_fps_dbg_en) printf("Hardware::Stats == %s\n", readStats().toString().c_str());
+    }
+  }
+
+  Hardware::Stats Hardware::readStats()
+  {
+    Hardware::Stats out;
+
+    out.frameDelta = m_fps_vs.dt;
+    out.frameDeltaAvg = m_fps_vs.dt_avg;
+    out.frameDeltaFilter = m_fps_vs.p;
+
+    out.hwDelta = m_fps_hw.dt;
+    out.hwDeltaAvg = m_fps_hw.dt_avg;
+    out.hwDeltaFilter = m_fps_hw.p;
+
+    return out;
+  }
+
+  int Hardware::readFrame(cv::Mat& out)
+  {
+    m_cvCamera->retrieve(out);
+
+    cv::Rect gArea(48, 0, 1280, 800);
+    out = out(gArea);
+
+    return 0;
   }
 
   Camera* Hardware::getCamera() {
