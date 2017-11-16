@@ -43,14 +43,22 @@ namespace tuum { namespace hal {
     void coilCharge();
     void coilRelease();
 
+    // Interface function
+    void coilKick();
+
+    // Legacy dribbler methods
     bool getDribblerState();
     void startDribbler(float = 0.2);
     void stopDribbler();
 
+    // Pitcher api
     void setThrowSpeed(unsigned int);
     void setThrowAngle(unsigned int);
 
-    void coilKick();
+    // Abstract state controls
+    void initialState();
+    void pickupState();
+
   };
 
 }}

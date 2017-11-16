@@ -159,4 +159,17 @@ namespace hal {
     send({id, format("%s,%i", CMD_SET_THROW_ANGLE, percent)});
   }
 
+  void MainBoard::initialState()
+  {
+    setThrowSpeed(0);
+    setThrowAngle(0);
+  }
+
+  void MainBoard::pickupState()
+  {
+    // if(!mb->getDribblerState()) mb->startDribbler(0.4);
+
+    if(m_throwSpeed < 10) setThrowSpeed(40);
+  }
+
 }}
