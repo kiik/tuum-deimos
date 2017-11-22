@@ -102,6 +102,8 @@ namespace hal {
 
       Stats readStats();
 
+      void pitcherSet(uint8_t, uint8_t);
+
     private:
       MotionControl m_motCtl;
 

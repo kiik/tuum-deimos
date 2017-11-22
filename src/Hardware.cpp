@@ -111,6 +111,15 @@ namespace tuum { namespace hal {
     return 0;
   }
 
+  void Hardware::pitcherSet(uint8_t relSpeed, uint8_t relAngle)
+  {
+    relSpeed = MIN(relSpeed, 99);
+    relAngle = MIN(relAngle, 99);
+
+    HWBus.sendCommand(1, tuum::format("sng,%i", relAngle));
+    HWBus.sendCommand(1, tuum::format("sms,%i", relSpeed));
+  }
+
   Camera* Hardware::getCamera() {
     return m_frontCamera;
   }
