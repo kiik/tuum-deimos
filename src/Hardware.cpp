@@ -144,7 +144,9 @@ namespace tuum { namespace hal {
     int v = relSpeed < 99 ? relSpeed : 99;
     int a = relAngle < 99 ? relAngle : 99;
 
-    printf("pitcherSet(%i, %i) / %s\n", relSpeed, relAngle, tuum::format("sng,%u", relAngle).c_str());
+    if(a > 0 && a < 10) a = 10;
+
+    printf("pitcherSet(%i, %i) / %s\n", v, a, tuum::format("sng,%u", a).c_str());
 
     // 2 argument - "sng,{0}".format(relAngle)
     HWBus.sendCommand(1, tuum::format("sng,%i", a));
