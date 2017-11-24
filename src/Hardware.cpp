@@ -17,6 +17,9 @@ namespace tuum { namespace hal {
 
   const RTX485::DeviceID RTX_MAIN_BOARD_ID = 0;
 
+  bool motor_test = true, pitcher_auto = true;
+  time_ms_t mt_t0;
+
   Hardware::Hardware():
     m_frontCamera(nullptr),
     m_backCamera(nullptr),
@@ -59,7 +62,7 @@ namespace tuum { namespace hal {
   }
 
   void Hardware::setup() {
-
+    pitcherSet(50, 50);
   }
 
   void Hardware::process() {
@@ -80,9 +83,22 @@ namespace tuum { namespace hal {
       m_mainBoard.run();
     }
 
-    if(m_clk_dbg.tick(t))
+    if(pitcher_auto && m_clk_dbg.tick(t))
     {
       if(m_fps_dbg_en) printf("Hardware::Stats == %s\n", readStats().toString().c_str());
+
+      if(t - mt_t0 >= 3000) {
+	mt_t0 = t;
+        if(motor_test)
+	{
+          motor_test = false;
+	  HWBus.sendCommand(1, "sms,20");
+	}
+	else
+	{
+	  HWBus.sendCommand(1, "sms,0");
+	}
+      }
     }
   }
 
@@ -101,23 +117,42 @@ namespace tuum { namespace hal {
     return out;
   }
 
+  cv::Mat imgBuf;
+
   int Hardware::readFrame(cv::Mat& out)
   {
-    m_cvCamera->retrieve(out);
+    m_cvCamera->retrieve(imgBuf);
+    // out = cv::imread("./basketball_demo_00.png");
+    // imgL = imgRGB[0:800,48:1328,: ]
+    // imgR = imgRGB[0:800,1328:2608,: ]
 
-    cv::Rect gArea(48, 0, 1280, 800);
-    out = out(gArea);
+    cv::Size sz = imgBuf.size();
+    cv::Rect gArea(1328, 0, 2608 - 1328, 800);
+
+    if(sz.width == 3448)
+      out = imgBuf(gArea);
+    else
+      out = imgBuf;
 
     return 0;
   }
 
   void Hardware::pitcherSet(uint8_t relSpeed, uint8_t relAngle)
   {
-    relSpeed = MIN(relSpeed, 99);
-    relAngle = MIN(relAngle, 99);
+    if(pitcher_auto) pitcher_auto = false;
 
-    HWBus.sendCommand(1, tuum::format("sng,%i", relAngle));
-    HWBus.sendCommand(1, tuum::format("sms,%i", relSpeed));
+    int v = relSpeed < 99 ? relSpeed : 99;
+    int a = relAngle < 99 ? relAngle : 99;
+
+    printf("pitcherSet(%i, %i) / %s\n", relSpeed, relAngle, tuum::format("sng,%u", relAngle).c_str());
+
+    // 2 argument - "sng,{0}".format(relAngle)
+    HWBus.sendCommand(1, tuum::format("sng,%i", a));
+    HWBus.sendCommand(1, tuum::format("sms,%i", v));
+    HWBus.sendCommand(1, tuum::format("sng,%i", a));
+    HWBus.sendCommand(1, tuum::format("sms,%i", v));
+    HWBus.sendCommand(1, tuum::format("sng,%i", a));
+    HWBus.sendCommand(1, tuum::format("sms,%i", v));
   }
 
   Camera* Hardware::getCamera() {

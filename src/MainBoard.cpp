@@ -47,6 +47,8 @@ namespace hal {
   void MainBoard::init(RTX485::WriteHandle wHandle, RTX485::SignalService sigRegister) {
     RTX485::DeviceCallback cb = std::bind1st(std::mem_fun(&MainBoard::signal), this);
     RTX485::Device::init(wHandle, sigRegister, cb);
+
+    RTXLOG("Ready.");
   }
 
   void MainBoard::signal(RTX485::Message m) {
@@ -87,6 +89,7 @@ namespace hal {
     if(!m_coilCharged) {
       coilCharge();
     }
+
   }
 
   bool MainBoard::getSwitch(size_t ix) {
