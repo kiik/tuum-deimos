@@ -47,7 +47,7 @@ namespace tuum { namespace hal {
       m_backCamera = new Camera(gC.getStr("Vision.SecondCamera"), CAMERA_WIDTH, CAMERA_HEIGHT);
     */
 
-    m_cvCamera = new cv::VideoCapture(1);
+    m_cvCamera = new cv::VideoCapture(gC.getInt("Vision.FirstCameraIndex"));
     m_cvCamera->grab();
 
     if(gC.getStr("HW.Active") == "Y") {
