@@ -103,6 +103,7 @@ namespace hal {
       Stats readStats();
 
       void pitcherSet(uint8_t, uint8_t);
+      Vec2i pitcherGet();
 
     private:
       MotionControl m_motCtl;
@@ -116,6 +117,8 @@ namespace hal {
       int m_coilGun;
       int m_ballSensor;
       int m_switches;
+
+      uint8_t m_pitchSpeed, m_pitchAngle;
 
       MainBoard m_mainBoard;
 

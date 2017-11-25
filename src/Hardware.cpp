@@ -25,7 +25,8 @@ namespace tuum { namespace hal {
     m_backCamera(nullptr),
     m_clk_30Hz(1000 / 30),
     m_clk_50Hz(1000 / 50),
-    m_clk_dbg(1000)
+    m_clk_dbg(1000),
+    m_pitchSpeed(0), m_pitchAngle(0)
   {
 
   }
@@ -155,6 +156,14 @@ namespace tuum { namespace hal {
     HWBus.sendCommand(1, tuum::format("sms,%i", v));
     HWBus.sendCommand(1, tuum::format("sng,%i", a));
     HWBus.sendCommand(1, tuum::format("sms,%i", v));
+
+    m_pitchSpeed = v;
+    m_pitchAngle = a;
+  }
+
+  Vec2i Hardware::pitcherGet()
+  {
+    return Vec2i(m_pitchSpeed, m_pitchSpeed);
   }
 
   Camera* Hardware::getCamera() {
