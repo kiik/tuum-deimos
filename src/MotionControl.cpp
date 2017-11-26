@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "tuum_logger.hpp"
+#include "platform.hpp"
 
 #include "MotionControl.hpp"
 

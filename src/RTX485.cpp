@@ -48,7 +48,7 @@ namespace tuum { namespace hal {
   void RTX485::sendCommand(DeviceID id, std::string cmd) {
     std::stringstream data;
     data << '<' << (unsigned int)id << ":" << cmd << ">\n";
-    //RTXLOG(format("%s", data.str()), LOG_DEBUG);
+    // RTXLOG(format("%s", data.str()), LOG_DEBUG);
     std::string buf = data.str();
 
     if(!dbg_out) {

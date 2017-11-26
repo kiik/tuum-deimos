@@ -63,7 +63,7 @@ namespace tuum { namespace hal {
   }
 
   void Hardware::setup() {
-    pitcherSet(50, 50);
+    pitcherSet(0, 10);
   }
 
   void Hardware::process() {
@@ -147,13 +147,13 @@ namespace tuum { namespace hal {
 
     if(a > 0 && a < 10) a = 10;
 
-    printf("pitcherSet(%i, %i) / %s\n", v, a, tuum::format("sng,%u", a).c_str());
+    printf("pitcherSet(v=%i, a=%i) / %s\n", v, a, tuum::format("sng,%u", a).c_str());
 
     // 2 argument - "sng,{0}".format(relAngle)
     HWBus.sendCommand(1, tuum::format("sng,%i", a));
     HWBus.sendCommand(1, tuum::format("sms,%i", v));
-    HWBus.sendCommand(1, tuum::format("sng,%i", a));
-    HWBus.sendCommand(1, tuum::format("sms,%i", v));
+
+    v += 5;
     HWBus.sendCommand(1, tuum::format("sng,%i", a));
     HWBus.sendCommand(1, tuum::format("sms,%i", v));
 
